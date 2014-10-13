@@ -1,21 +1,21 @@
-import Data.Char	
+import Data.Char        
 
 -- 1) function that takes a string and length boundaries and checks whether the string length is within those bounds (inclusive)
 strlenInRange str a b
-  | a < 0 || b < 0	= error "String length cannot be a negative number"
-  | otherwise		= length str >= a && length str <= b
+  | a < 0 || b < 0        = error "String length cannot be a negative number"
+  | otherwise                = length str >= a && length str <= b
 
 -- 2) function that determines if an element of list with given index is larger than provided value
 isHereAGreater list ind val
-  | ind < 0 || ind > length list	= False
-  | otherwise						= list !! ind > val
+  | ind < 0 || ind > length list        = False
+  | otherwise                                                = list !! ind > val
 
 -- 3) impure function that gets 2 lines of user input (a sentence and a word) and removes all occurences of the given word in the sentence
 wordFilter = do
-	sentence <- getLine
-	word <- getLine
-	let sentence' = rmWord sentence word
-	putStrLn sentence'
+        sentence <- getLine
+        word <- getLine
+        let sentence' = rmWord sentence word
+        putStrLn sentence'
 
 -- 3) pure function that removes all occurences of a single word in the sentence
 rmWord sentence word = unwords [x | x <- words sentence, x /= word]
