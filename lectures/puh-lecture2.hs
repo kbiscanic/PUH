@@ -1,5 +1,5 @@
-import Data.Char
-import Data.List
+import           Data.Char
+import           Data.List
 
 ex21 lst = init $ init $ init $ tail lst
 

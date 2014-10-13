@@ -1,5 +1,5 @@
-import Data.Char
-import Data.List
+import           Data.Char
+import           Data.List
 
 x = 2
 
@@ -29,18 +29,18 @@ bigNumber' x = x >= 1000
 merge s1 s2 = s1 ++ (if s1 < s2 then " is not " else " is ") ++ s2
 merge2 s1 s2 = s1 ++ " is " ++ (if s1 < s2 then "not " else "") ++ s2
 merge3 s1 s2
-  | s1 < s2		= s1 ++ " is " ++ s2
-  | otherwise	= s1 ++ " is not " ++ s2
-  
+  | s1 < s2     = s1 ++ " is " ++ s2
+  | otherwise   = s1 ++ " is not " ++ s2
+
 grade score
-  | score < 50	= 1
-  | score < 63	= 2
-  | score < 76	= 3
-  | score < 89	= 4
-  | otherwise	= 5
-  
+  | score < 50        = 1
+  | score < 63        = 2
+  | score < 76        = 3
+  | score < 89        = 4
+  | otherwise         = 5
+
 showSalary amount bonus
-  | bonus /= 0	= "Salary is " ++ show amount ++ ", and a bonus " ++ show bonus
-  | otherwise	= "Salary is " ++ show amount
-  
+  | bonus /= 0        = "Salary is " ++ show amount ++ ", and a bonus " ++ show bonus
+  | otherwise        = "Salary is " ++ show amount
+
 concat3 s1 s2 s3 = s1 ++ (if length s2 < 2 then "" else s2) ++ s3
