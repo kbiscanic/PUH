@@ -1,5 +1,5 @@
-import Data.List
-import Data.Char
+import           Data.Char
+import           Data.List
 
 -- Exercise 1.1:
 -- Define a function that returns a list without the first and last three elements.
@@ -20,7 +20,7 @@ longCat s1 s2
 safeHead l
   | null l    = []
   | otherwise = head l : []
-  
+
 -- Exercise 1.5:
 -- Define a function 'hasDuplicates' that checks whether a list contains duplicate elements (use 'nub').
 hasDuplicates xs = xs /= nub xs
