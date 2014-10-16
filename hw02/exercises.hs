@@ -3,11 +3,15 @@ import           Data.List
 
 -- Exercise 1.1:
 -- Define a function that returns a list without the first and last three elements.
-cripple str = tail $ init $ init $ init str
+cripple xs
+  | length xs >= 4      = tail $ init $ init $ init xs
+  | otherwise           = error "Not enough elements"
 
 -- Exercise 1.2:
 -- Define a function 'initals s1 s2' that takes a person's name and a surname as input and returns a string consisting of person's initials.
-initials s1 s2 = head s1 : (". " ++ (head s2 : "."))
+initials s1 s2
+  | null s1 || null s2  = error "Lists cannot be empty"
+  | otherwise           = head s1 : (". " ++ (head s2 : "."))
 
 -- Exercise 1.3:
 -- Define a function that concatenates two strings, so that the longest string always comes first.
@@ -27,19 +31,20 @@ hasDuplicates xs = xs /= nub xs
 
 -- Exercise 2.1:
 -- Redefine 'doublesFromTo' so that it also works when b<a.
-doublesFromTo a b = [x*2 | x <- [a,(if a > b then a-1 else a+1) .. b]]
+doublesFromTo a b = [x*2 | x <- [a,(if a > b then pred a else succ a) .. b]]
 
 -- Exercise 2.2:
 -- Redefine 'ceasarCode n' so that it shifts all letters a specified number of positions 'n', converts all input to lowercase, and ensures that letters remain within the ['a'..'z'] interval.
-ceasarCode n s = [ cycle ['a'..'z'] !! (ord (toLower c) - ord 'a' + n)  | c <- s, isLetter c]
+ceasarCode n s = [if isLetter c then cycle ['a'..'z'] !! (ord (toLower c) - ord 'a' + n) else c  | c <- s]
 
 -- Exercise 3.1:
 -- Define 'letterCount' that computes the total number of letters in a string, hereby ignoring the whitespaces and all words shorter than three letters.
-letterCount xs = sum [length x | x <- words xs, length x >= 3]
+letterCount xs = sum [1 | x <- words xs, length x >= 3, y <- x, isLetter y]
 
 -- Exercise 3.2:
 -- Redefine 'isPalindrome' so that it's case insensitive and works correctly for strings that contain whitespaces
-isPalindrome s = [toLower x | x <- s, isAlphaNum x] == reverse [toLower x | x <- s, isAlphaNum x]
+isPalindrome s = s1 == reverse s1
+  where s1 = concat [[toLower x | x <- xs] | xs <- words s]
 
 -- Exercise 3.3:
 -- Define 'flipp xss' that takes a list of lists, reverts each individual list, and concatenates all of them, but in the reverse order.
