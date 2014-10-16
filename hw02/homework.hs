@@ -6,7 +6,7 @@ import           System.Environment
 toTitleCase string = unwords [toUpper (head x) : tail x | x <- words string]
 
 -- 1b) function toTitleCase' that takes an additional argument: a list of words that will remain in lowercase, unless the word occurs at the beginning of the string
-toTitleCase' string ignored = unwords [if (((words string) !! 0 == x)) || (notElem x ignored) then toUpper (head x) : tail x else x | x <- words string]
+toTitleCase' string ignored = toUpper (head (head (words string))) : tail (head (words string)) ++ " " ++ unwords [if notElem x ignored then toUpper (head x) : tail x else x | x <- tail $ words string]
 
 -- 2) Implement a function trimN that takes a list and a number n. It removes n elements from each side of the list. If the trimming would eliminate more elements than the list contains, the list is returned unchanged.
 trimN xs n
@@ -31,13 +31,14 @@ triangleCounter lst = length $ nub [sort [x, y, z] | x <- lst, y <- lst, z <- ls
 reverseWords string = unwords $ reverse $ words string
 
 -- 7) Define intersect' and difference that implement the usual set operators.
-intersect' _ [] = []
-intersect' [] _ = []
-intersect' s1 s2 = [x | x <- s1, x `elem` s2]
+intersect' s1 s2
+  | null s1 || null s2  = []
+  | otherwise           = [x | x <- s1, x `elem` s2]
 
-difference s [] = s
-difference [] _ = []
-difference s1 s2 = [x | x <- s1, x `notElem` s2]
+difference s1 s2
+  | null s1     = []
+  | null s2     = s1
+  |otherwise    = [x | x <- s1, x `notElem` s2]
 
 -- 8a) The function isWellFormed that checks whether the matrix has all rows of equal length.
 isWellFormed mat
@@ -55,7 +56,7 @@ getElement mat row col
   | not (isWellFormed mat)                              = error "Matrix is malformed"
   | row < 0 || col < 0                                  = error "Index out of bounds"
   | row >= fst (size mat) || col >= snd (size mat)      = error "Index out of bounds"
-  | otherwise                                           = (mat !! row) !! col
+  | otherwise                                           = mat !! row !! col
 
 -- 8d) The function getRow that returns the i-th row of a matrix.
 getRow mat row
@@ -73,15 +74,15 @@ getCol mat col
 addMatrices mat1 mat2
   | not (isWellFormed mat1) || not (isWellFormed mat2)  = error "Matrix is malformed"
   | size mat1 /= size mat2                              = error "Matrices are not of equal size"
-  | otherwise                                           = [[mat1 !! i !! j + mat2 !! i !! j | j <- [0 .. snd (size mat1) - 1]] | i <- [0 .. fst (size mat1) - 1]]
+  | otherwise                                           = [[getElement mat1 i j + getElement mat2 i j | j <- [0 .. snd (size mat1) - 1]] | i <- [0 .. fst (size mat1) - 1]]
 
 -- 8g) The function transpose' that returns a transposed version of the given matrix.
 transpose' mat
-  | isWellFormed mat    = [[mat !! i !! j | i <- [0 .. fst (size mat) - 1]] | j <- [0 .. snd (size mat) - 1]]
+  | isWellFormed mat    = [[getElement mat i j | i <- [0 .. fst (size mat) - 1]] | j <- [0 .. snd (size mat) - 1]]
   | otherwise           = error "Matrix is malformed"
 
 -- 8i) The function multMatrices that multiplies two matrices.
 multMatrices mat1 mat2
   | not (isWellFormed mat1) || not (isWellFormed mat2)  = error "Matrix is malformed"
   | snd (size mat1) /= fst (size mat2)                  = error "Incompatible matrix dimensions"
-  | otherwise                                           = [[sum[mat1 !! i !! k * mat2 !! k !! j | k <- [0 .. snd (size mat1) - 1]]| j <- [0 .. snd (size mat1) - 1]] | i <- [0 .. fst (size mat1) - 1]]
+  | otherwise                                           = [[sum[getElement mat1 i k * getElement mat2 k j | k <- [0 .. snd (size mat1) - 1]]| j <- [0 .. snd (size mat1) - 1]] | i <- [0 .. fst (size mat1) - 1]]
