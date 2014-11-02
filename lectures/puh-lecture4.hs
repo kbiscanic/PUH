@@ -28,8 +28,8 @@ pad' s1 s2 = let
 
 -- Exercise 4.1
 profun p (_:x:_) = "The pair " ++ (case p of
-	(1, 1) -> "contains two ones"
-	(1, _) -> "contains one one"
-	(_, 1) -> "contains one one"
-	(_, _) -> "does not containt a single one")
+        (1, 1) -> "contains two ones"
+        (1, _) -> "contains one one"
+        (_, 1) -> "contains one one"
+        (_, _) -> "does not containt a single one")
   ++ "and the second element of the list is " ++ show x
