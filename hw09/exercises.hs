@@ -1,9 +1,100 @@
 import Data.Char
+import Data.Foldable (Foldable, foldr)
 import Data.List
+import qualified Data.Map as M
 import qualified Data.Set as S
 import System.Environment
 import System.Random
 
+data Sex = Male | Female deriving (Show,Read,Eq,Ord)
+data Person = Person {
+  idNumber :: String,
+  forename :: String,
+  surname  :: String,
+  sex      :: Sex,
+  age      :: Int,
+  partner  :: Maybe Person,
+  children :: [Person] } deriving (Show,Read,Eq,Ord)
+  
+class Ageing a where
+  currentAge :: a -> Int
+  maxAge     :: a -> Int
+  makeOlder  :: a -> a
+  
+instance Ageing Person where
+  currentAge = age
+  makeOlder p = p {age = age p + 1}
+  maxAge    _ = 123
+  
+data Breed = Beagle | Husky | Pekingese deriving (Eq,Ord,Show,Read)
+data Dog = Dog {
+  dogName  :: String,
+  dogBreed :: Breed,
+  dogAge   :: Int } deriving (Eq,Ord,Show,Read)
+  
+instance Ageing Dog where
+  currentAge  = dogAge
+  makeOlder d = d {dogAge = dogAge d + 1}
+  maxAge d    = case dogBreed d of 
+                  Husky -> 29
+                  _     -> 20
+
+-- 1.1
+compareRelativeAge :: (Ageing a, Ageing b) => a -> b -> Ordering
+compareRelativeAge x y = compare (fromIntegral (currentAge x) / fromIntegral (maxAge x)) (fromIntegral (currentAge y) / fromIntegral (maxAge y))
+				  
+-- 1.2
+class Nameable a where
+  name :: a -> String
+  
+instance Nameable Dog where
+  name d = dogName d ++ " the Dog"
+  
+instance Nameable Person where
+  name p = forename p ++ " " ++ surname p
+				  
+-- 2.1
+class Takeable t where
+  takeSome :: Int -> t a -> [a]
+				
+instance Takeable [] where
+  takeSome = take
+  
+-- 2.2
+class Headed t where
+  headOf :: t a -> a
+  headOff :: t a -> t a
+  
+instance Headed [] where
+  headOf = head
+  headOff = tail
+
+data Tree a = Null | Node a (Tree a) (Tree a) deriving (Show,Eq)
+
+instance Functor Tree where
+  fmap _ Null         = Null
+  fmap f (Node x l r) = Node (f x) (fmap f l) (fmap f r)
+
+-- 3.1
+mapOnTreeMaybe :: (Functor f) => (a -> b) -> f a -> f b
+mapOnTreeMaybe = fmap
+
+-- 4.1
+sumPositive :: (Foldable t, Num a, Ord a) => t a -> a
+sumPositive t = Data.Foldable.foldr (\x c -> if x > 0 then x + c else c) 0 t
+
+-- 4.2
+size :: Foldable t => t a -> Int
+size t = Data.Foldable.foldr (\x c -> c+1) 0 t
+
+-- 5.1
+toSet :: (Foldable t, Ord a) => t a -> S.Set a
+toSet = Data.Foldable.foldr S.insert S.empty
+  
+-- 5.2
+indexWords :: String -> M.Map String Int
+indexWords s = Data.Foldable.foldr (\x c -> M.insertWith (\a b -> a + b) x 1 c) M.empty (words s)
+  
 -- 1.1
 main :: IO ()
 main = do
