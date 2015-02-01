@@ -1,4 +1,3 @@
-PUH
-===
-
-Programiranje u Haskellu - ak. godina 2014/15
+# PUH 2014/2015 - Programming in Haskell
+## Course homeworks
+### University of Zagreb
